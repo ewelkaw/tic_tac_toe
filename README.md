@@ -1,10 +1,10 @@
 # Tic-Tac-Toe GAME
 
 ### 1. FIRST OF ALL
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 ### 2. HOW TO PLAY?
-python3 play.py 
+```python3 play.py```
 
 In the main window user need to decide what kind of mark wants to use (X or O).
 
