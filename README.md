@@ -1,4 +1,4 @@
-# Tic-Tac-Toe GAME
+# Tic-Tac-Toe GAME using Pygame
 
 ### 1. FIRST OF ALL
 ```pip install -r requirements.txt```
