@@ -54,10 +54,10 @@ class Game:
         return False
 
     @property
-    def avaliable_fields(self) -> list:
-        avalaible_fields = []
+    def available_fields(self) -> list:
+        available_fields = []
         for i in range(BOARD_SIZE[0]):
             for j in range(BOARD_SIZE[1]):
                 if self.board[i][j].status == "e":
-                    avalaible_fields.append((i,j))
-        return avalaible_fields
+                    available_fields.append((i,j))
+        return available_fields

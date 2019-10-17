@@ -11,9 +11,9 @@ GAME_SIZE = (600,600)
 
 IMAGES = {
     "e": pygame.image.load(str(IMAGES_PATH.joinpath("empty.png"))), 
-    "o": pygame.image.load(str(IMAGES_PATH.joinpath("o.png"))),
-    "x": pygame.image.load(str(IMAGES_PATH.joinpath("x.png"))),
-    "start": pygame.image.load(str(IMAGES_PATH.joinpath("start.png"))),
+    "o": pygame.image.load(str(IMAGES_PATH.joinpath("o_1.png"))),
+    "x": pygame.image.load(str(IMAGES_PATH.joinpath("x_1.png"))),
+    "start": pygame.image.load(str(IMAGES_PATH.joinpath("start_2.png"))),
     "game_over": pygame.image.load(str(IMAGES_PATH.joinpath("game_over.png")))
 }
 
@@ -34,11 +34,8 @@ def draw_board(game: Game):
 def show_winner(winner: str):
     done = False
     while not done:
-        pygame.display.set_caption(" THE WINNER IS {}".format(winner))
-        img = IMAGES[winner]
-        WINDOW.fill([255,255,255])
-        WINDOW.blit(img, (200, 200))
-        pygame.display.flip()
+        pygame.display.set_caption(f" THE WINNER IS {winner.upper()}")
+        draw(winner, (200, 200))
 
         for e in pygame.event.get():
             if e.type == pygame.QUIT or (
@@ -46,26 +43,18 @@ def show_winner(winner: str):
                 and (e.key == K_RETURN or e.key == K_SPACE or e.key == K_ESCAPE)
             ):
                 done = True
-                break
 
 def game_over():
     done = False
     while not done:
         pygame.display.set_caption("GAME OVER")
-        img = IMAGES["game_over"]
-        WINDOW.fill([255,255,255])
-        WINDOW.blit(img, (0, 0))
-        pygame.display.flip()
+        draw("game_over", (0, 0))
 
         for e in pygame.event.get():
-            if e.type == pygame.QUIT or (
-                e.type == KEYUP
-                and (e.key == K_RETURN or e.key == K_SPACE or e.key == K_ESCAPE)
+            if e.type == pygame.QUIT or (e.type == KEYUP and (e.key == K_RETURN or e.key == K_SPACE or e.key == K_ESCAPE)
             ):
                 done = True
-                break
-            if e.type == MOUSEBUTTONDOWN and e.button == 1:
-                main()
+    
 
 def start_game(starting_mark):
     game = Game()
@@ -76,36 +65,45 @@ def start_game(starting_mark):
 
     players = [user, computer]
     for player in cycle(players):
+        pygame.display.set_caption(f"Player {player.mark}")
         if game.finished:
             show_winner(game.winner)
-        if not game.avaliable_fields:
+            break
+        elif not game.available_fields:
             game_over()
+            break
+
         done = False
         while not done:
             for e in pygame.event.get():
                 if e.type == MOUSEBUTTONDOWN and e.button == 1:
                     x = e.pos[0] // 200
                     y = e.pos[1] // 200
-                    if (x, y) in game.avaliable_fields:
+                    if (x, y) in game.available_fields:
                         game.update_single_field(player.mark, (x,y))
                         draw_board(game)
                         done = True
 
+def draw(img: str,size : tuple):
+    img = IMAGES[img]
+    WINDOW.fill([255,255,255])
+    WINDOW.blit(img, size)
+    pygame.display.flip()
+
 def main():
     pygame.display.set_caption("Choose X or O")
-    img = IMAGES["start"]
-    WINDOW.fill([180,180,180])
-    WINDOW.blit(img, (0, 0))
-    pygame.display.flip()
+    draw("start", (0, 0))
 
     done = False
     while not done:
         for e in pygame.event.get():
+            if e.type == pygame.QUIT or (e.type == KEYUP and (e.key == K_RETURN or e.key == K_SPACE or e.key == K_ESCAPE)):
+                done = True
             if e.type == MOUSEBUTTONDOWN and e.button == 1:
-                if e.pos[0] in range(0, 300) and e.pos[1] in range(0, 300):
+                if e.pos[0] in range(0, 300):
                     starting_mark = "x"
                     done = True
-                if e.pos[0] in range(300,600) and e.pos[1] in range(300,600):
+                if e.pos[0] in range(300,600):
                     starting_mark = "o"
                     done = True
 

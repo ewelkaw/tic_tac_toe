@@ -60,3 +60,10 @@ def test_finish_game_failure():
         game.update_single_field("x", i)
     print(game.board)
     assert game.finished == False
+
+
+# def draw_image(img: str, size: tuple):
+#         img = IMAGES[img]
+#         WINDOW.fill([255,255,255])
+#         WINDOW.blit(img, size)
+#         pygame.display.flip()
