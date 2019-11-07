@@ -5,9 +5,10 @@ from pathlib import Path
 import pygame
 from pygame.locals import *
 
+from minimax_alg import choose_best_move
 from game import Game
 
-Player = namedtuple("Player", ["mark"])
+Player = namedtuple("Player", ["mark", "player_name"])
 IMAGES_PATH = Path(".").absolute().joinpath("images")
 GAME_SIZE = (600, 600)
 
@@ -66,8 +67,8 @@ def start_game(starting_mark):
     game = Game()
     draw_board(game)
 
-    user = Player(mark=starting_mark)
-    computer = Player(mark="o") if starting_mark == "x" else Player(mark="x")
+    user = Player(mark=starting_mark, player_name="user")
+    computer = Player(mark="o", player_name="computer") if starting_mark == "x" else Player(mark="x", player_name="computer")
 
     players = [user, computer]
     for player in cycle(players):
@@ -81,14 +82,24 @@ def start_game(starting_mark):
 
         done = False
         while not done:
-            for e in pygame.event.get():
-                if e.type == MOUSEBUTTONDOWN and e.button == 1:
-                    x = e.pos[0] // 200
-                    y = e.pos[1] // 200
-                    if (x, y) in game.available_fields:
-                        game.update_single_field(player.mark, (x, y))
-                        draw_board(game)
-                        done = True
+            if player == user:
+                for e in pygame.event.get():
+                    if e.type == MOUSEBUTTONDOWN and e.button == 1:
+                        x = e.pos[0] // 200
+                        y = e.pos[1] // 200
+                        if (x, y) in game.available_fields:
+                            game.update_single_field(player.mark, (x, y))
+                            draw_board(game)
+                            done = True
+            elif player == computer:
+                x, y, _ = choose_best_move(game, len(game.available_fields) - 1, player)
+                print("in play:", (x, y))
+                if (x, y) in game.available_fields:
+                    game.update_single_field(player.mark, (x, y))
+                    draw_board(game)
+                    done = True 
+                else:
+                    raise "AAAAA"
 
 
 def draw(img: str, size: tuple):
