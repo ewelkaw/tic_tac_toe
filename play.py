@@ -8,7 +8,8 @@ from pygame.locals import *
 from minimax_alg import choose_best_move
 from game import Game
 
-Player = namedtuple("Player", ["mark", "player_name"])
+from const import Player
+
 IMAGES_PATH = Path(".").absolute().joinpath("images")
 GAME_SIZE = (600, 600)
 
@@ -22,7 +23,6 @@ IMAGES = {
 
 pygame.init()
 WINDOW = pygame.display.set_mode(GAME_SIZE)
-CLOCK = pygame.time.Clock()
 
 
 def draw_board(game: Game):
@@ -92,14 +92,12 @@ def start_game(starting_mark):
                             draw_board(game)
                             done = True
             elif player == computer:
-                x, y, _ = choose_best_move(game, len(game.available_fields) - 1, player)
+                x, y, _ = choose_best_move(game, len(game.available_fields), player)
                 print("in play:", (x, y))
                 if (x, y) in game.available_fields:
                     game.update_single_field(player.mark, (x, y))
                     draw_board(game)
                     done = True 
-                else:
-                    raise "AAAAA"
 
 
 def draw(img: str, size: tuple):

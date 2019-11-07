@@ -1,8 +1,11 @@
-from copy import deepcopy
 from math import inf as infinity
+from collections import namedtuple
+
+from const import Player
+from game import Game
 
 
-def evaluate(game):
+def evaluate(game: Game) -> bool:
     if game.finished and game.winner == "o":
         return 1
     elif game.finished and game.winner == "x":
@@ -10,9 +13,7 @@ def evaluate(game):
     else:
         return 0
 
-def choose_best_move(game, depth, player):
-    from play import Player
-
+def choose_best_move(game: Game, depth: int, player: Player) -> list:
     if player.player_name == "computer":
         best = [-1, -1, -infinity]
     else:
@@ -23,7 +24,7 @@ def choose_best_move(game, depth, player):
         return [-1, -1, score]
 
     for field in game.available_fields:
-        new_game = deepcopy(game)
+        new_game = game.copy()
         new_game.update_single_field(player.mark, field)
 
         if player.mark == "x" and player.player_name == "computer":
