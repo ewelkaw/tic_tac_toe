@@ -18,17 +18,21 @@ WINNING_COMBINATIONS = [
 
 
 class Game:
+    def copy(self):
+        new = Game()
+        for position in self.filled_fields:
+            x,y = position
+            new.board[x][y] = self.board[x][y]
+        new.filled_fields = list(self.filled_fields)
+        return new
+
     def __init__(self):
         self.board = self.__setup_board()
         self.winner = None
+        self.filled_fields = []
 
     def __setup_board(self):
-        board = []
-        for i in range(BOARD_SIZE[0]):
-            board.append([])
-            for j in range(BOARD_SIZE[1]):
-                board[i].append(Field(status=FIELDS["e"][0], status_img=FIELDS["e"][1]))
-        return board
+        return [[Field(status=FIELDS["e"][0], status_img=FIELDS["e"][1]) for j in range(BOARD_SIZE[1])] for i in range(BOARD_SIZE[0])]
 
     def update_single_field(self, value: str, position: tuple) -> list:
         x, y = position
@@ -36,6 +40,7 @@ class Game:
             self.board[x][y] = Field(
                 status=FIELDS[value][0], status_img=FIELDS[value][1]
             )
+        self.filled_fields.append(position)
         return self.board
 
     @property
@@ -47,14 +52,7 @@ class Game:
             z_object = self.board[z[0]][z[1]]
 
             if (
-                len(
-                    list(
-                        filter(
-                            lambda x: x.status != "e", [x_object, y_object, z_object]
-                        )
-                    )
-                )
-                == 3
+                len([x for x in [x_object, y_object, z_object] if x.status != "e"]) == 3
             ):
                 if x_object.status == y_object.status == z_object.status:
                     self.winner = x_object.status
